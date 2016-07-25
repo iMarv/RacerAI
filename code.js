@@ -4,7 +4,15 @@
  **/
 var boostAvailable = true;
 var checkpoints = [];
-var listComplete = false;
+var laps = parseInt(readline());
+
+for(var i = 0; i < laps; i++) {
+    let checkpoint = readline().split(' ');
+    checkpoints.push({
+        x: checkpoint[0],
+        y: checkpoint[1]
+    });
+}
 
 // Minimum distance for activiating boost
 const boostRadius = 2000;
@@ -18,9 +26,6 @@ const brakeStep2 = 1100;
 const brakeStep3 = 800;
 
 // Print log
-var log = (name, value) => {
-    printErr(`${name}: ${value}`);
-};
 
 // Functions for calculating distance between two points
 Math.dist = (x1, y1, x2 = 0, y2 = 0) => Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
@@ -112,55 +117,29 @@ var calculateGoal = (current, goal) => {
 // game loop
 while (true) {
     // Read an save all game inputs
-    var inputs = readline().split(' ');
+    var racer1 = readline().split(' ');
+    var racer2 = readline().split(' ');
 
     var racer = {
-        x: parseInt(inputs[0]),
-        y: parseInt(inputs[1])
+        1: {
+            x: parseInt(racer1[0]),
+            y: parseInt(racer1[1]),
+            vx: parseInt(racer1[2]),
+            vy: parseInt(racer1[3]),
+            angle: parseInt(racer1[4]),
+            nextCheckpoint: parseInt(racer1[5])
+        },
+        2: {
+            x: parseInt(racer2[0]),
+            y: parseInt(racer2[1]),
+            vx: parseInt(racer2[2]),
+            vy: parseInt(racer2[3]),
+            angle: parseInt(racer2[4]),
+            nextCheckpoint: parseInt(racer2[5])
+        }
     };
 
-    var checkP = {
-        x: parseInt(inputs[2]),
-        y: parseInt(inputs[3])
-    };
-
-    var nextCheckpointDist = parseInt(inputs[4]); // distance to the next checkpoint
-    var nextCheckpointAngle = parseInt(inputs[5]); // angle between your pod orientation and the direction of the next checkpoint
-    var inputs = readline().split(' ');
-
-    var opponent = {
-        x: parseInt(inputs[0]),
-        y: parseInt(inputs[1])
-    }
-
-    var goal;
-
-    // Get index of the current checkpoint
-    var checkIndex = indexOf(checkP);
-
-    // If the index of the checkpoint is 0 and the list of checkpoints contains more than 2 checkpoints
-    if (checkIndex === 0 && checkpoints.length > 1) {
-        // All checkpoints have been found
-        listComplete = true;
-    }
-
-    // If the checkpoint is not contained in the list yet
-    if (checkIndex < 0) {
-        // Add checkpoint to the list
-        checkpoints.push(checkP);
-
-        // Calculate goalpoint between racer and checkpoint
-        goal = calculateGoal(racer, checkP);
-
-    }
-    // If the list is complete
-    else if (listComplete) {
-        // Find the upcoming checkpoint
-        let nextCheck = (checkIndex + 1 == checkpoints.length) ? checkpoints[0] : checkpoints[checkIndex + 1];
-
-        // Calculate the goalpoint between the current checkpoint and the next one
-        goal = calculateGoal(nextCheck, checkP);
-    }
+    // TODO: Do something with opponent info
 
     // Calculate the speed
     let speed = adjustSpeed(distanceBetween(racer, goal), nextCheckpointAngle);
