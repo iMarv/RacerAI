@@ -26,6 +26,9 @@ const brakeStep2 = 1100;
 const brakeStep3 = 800;
 
 // Print log
+var log = (name, value) => {
+    printErr(`${name}: ${value}`);
+};
 
 // Functions for calculating distance between two points
 Math.dist = (x1, y1, x2 = 0, y2 = 0) => Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
